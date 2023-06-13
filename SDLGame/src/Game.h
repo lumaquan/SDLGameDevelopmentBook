@@ -6,7 +6,7 @@ class Game
 public:
 	Game();
 	~Game();
-	bool init(const char* title, int xpos, int ypos, int	height, int width, int flags);
+	bool init(const char* title, int xpos, int ypos, int	height, int width, bool fullscreen);
 	void render();
 	void update();
 	void handleEvents();
