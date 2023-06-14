@@ -2,7 +2,10 @@
 #include<SDL.h>
 
 
-Game::Game()
+int spritesheet_width = 0;
+int spritesheet_high = 0;
+
+Game::Game() :m_bRunning{}, m_pWindow{}, m_pRenderer{}, m_pTexture{}, m_sourceRectangle{}, m_destinationRectangle{}
 {
 }
 
@@ -25,14 +28,10 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, bo
 		{
 
 			m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, 0);
-			SDL_Surface* pTempSurface = SDL_LoadBMP("assets/rider.bmp");
-			m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer,pTempSurface);
+			SDL_Surface* pTempSurface = SDL_LoadBMP("assets/animate.bmp");
+			m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
 			SDL_FreeSurface(pTempSurface);
-			SDL_QueryTexture(m_pTexture, NULL, NULL, &m_sourceRectangle.w, &m_sourceRectangle.h);
-			m_destinationRectangle.x = m_sourceRectangle.x = 0;
-			m_destinationRectangle.y = m_sourceRectangle.y = 0;
-			m_destinationRectangle.w = m_sourceRectangle.w;
-			m_destinationRectangle.h = m_sourceRectangle.h;
+			SDL_QueryTexture(m_pTexture, NULL, NULL, &spritesheet_width, &spritesheet_high);
 			m_bRunning = true;
 		}
 		else
@@ -51,12 +50,21 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, bo
 void Game::render()
 {
 	SDL_RenderClear(m_pRenderer);
-	SDL_RenderCopy(m_pRenderer, m_pTexture, &m_sourceRectangle,&m_destinationRectangle);
+	SDL_RenderCopy(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle);
 	SDL_RenderPresent(m_pRenderer);
 }
 
 void Game::update()
 {
+	m_sourceRectangle.w = spritesheet_width / 6;
+	m_sourceRectangle.h = spritesheet_high;
+	m_sourceRectangle.x = spritesheet_width / 6 * int(((SDL_GetTicks() / 50) % 6));
+	m_sourceRectangle.y = 0;
+
+	m_destinationRectangle.w = spritesheet_width / 6;
+	m_destinationRectangle.h = spritesheet_high;
+	m_destinationRectangle.x = 0;
+	m_destinationRectangle.y = 0;
 }
 
 void Game::handleEvents()
