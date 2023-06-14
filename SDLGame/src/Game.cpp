@@ -1,5 +1,6 @@
 #include "Game.h"
 #include<SDL.h>
+#include<SDL_image.h>
 
 
 int spritesheet_width = 0;
@@ -28,7 +29,7 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, bo
 		{
 
 			m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, 0);
-			SDL_Surface* pTempSurface = SDL_LoadBMP("assets/animate.bmp");
+			SDL_Surface* pTempSurface = IMG_Load("assets/animate-alpha.png");
 			m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
 			SDL_FreeSurface(pTempSurface);
 			SDL_QueryTexture(m_pTexture, NULL, NULL, &spritesheet_width, &spritesheet_high);
@@ -50,7 +51,8 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, bo
 void Game::render()
 {
 	SDL_RenderClear(m_pRenderer);
-	SDL_RenderCopy(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle);
+	SDL_RenderCopyEx(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle, 0, 0, SDL_FLIP_HORIZONTAL);
+	//SDL_RenderCopy(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle);
 	SDL_RenderPresent(m_pRenderer);
 }
 
@@ -58,7 +60,7 @@ void Game::update()
 {
 	m_sourceRectangle.w = spritesheet_width / 6;
 	m_sourceRectangle.h = spritesheet_high;
-	m_sourceRectangle.x = spritesheet_width / 6 * int(((SDL_GetTicks() / 50) % 6));
+	m_sourceRectangle.x = spritesheet_width / 6 * int(((SDL_GetTicks() / 150) % 6));
 	m_sourceRectangle.y = 0;
 
 	m_destinationRectangle.w = spritesheet_width / 6;
