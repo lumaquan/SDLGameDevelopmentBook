@@ -6,7 +6,7 @@
 int spritesheet_width = 0;
 int spritesheet_high = 0;
 
-Game::Game() :m_bRunning{}, m_pWindow{}, m_pRenderer{}, m_pTexture{}, m_sourceRectangle{}, m_destinationRectangle{}
+Game::Game() :m_bRunning{}, m_pWindow{}, m_pRenderer{}, m_currentFrame{0}
 {
 }
 
@@ -29,10 +29,7 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, bo
 		{
 
 			m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, 0);
-			SDL_Surface* pTempSurface = IMG_Load("assets/animate-alpha.png");
-			m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
-			SDL_FreeSurface(pTempSurface);
-			SDL_QueryTexture(m_pTexture, NULL, NULL, &spritesheet_width, &spritesheet_high);
+			m_textureManager.load("assets/animate-alpha.png","animate", m_pRenderer);
 			m_bRunning = true;
 		}
 		else
@@ -51,22 +48,15 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, bo
 void Game::render()
 {
 	SDL_RenderClear(m_pRenderer);
-	SDL_RenderCopyEx(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle, 0, 0, SDL_FLIP_HORIZONTAL);
-	//SDL_RenderCopy(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle);
+	m_textureManager.draw("animate", 0, 0, 128, 82,m_pRenderer);
+	SDL_RenderPresent(m_pRenderer);
+	m_textureManager.drawFrame("animate", 100, 100, 128, 82,1, m_currentFrame, m_pRenderer);
 	SDL_RenderPresent(m_pRenderer);
 }
 
 void Game::update()
 {
-	m_sourceRectangle.w = spritesheet_width / 6;
-	m_sourceRectangle.h = spritesheet_high;
-	m_sourceRectangle.x = spritesheet_width / 6 * int(((SDL_GetTicks() / 150) % 6));
-	m_sourceRectangle.y = 0;
-
-	m_destinationRectangle.w = spritesheet_width / 6;
-	m_destinationRectangle.h = spritesheet_high;
-	m_destinationRectangle.x = 0;
-	m_destinationRectangle.y = 0;
+	m_currentFrame = int(((SDL_GetTicks() / 100) % 6));
 }
 
 void Game::handleEvents()
