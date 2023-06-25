@@ -153,6 +153,18 @@
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\TextureManager.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="libpng16-16.dll" />
+    <None Include="SDL2.dll" />
+    <None Include="SDL2_image.dll" />
+    <None Include="zlib1.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\animate-alpha.png" />
+    <Image Include="assets\animate.bmp" />
+    <Image Include="assets\animate.png" />
+    <Image Include="assets\rider.bmp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

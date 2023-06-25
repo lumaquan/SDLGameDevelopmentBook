@@ -1,6 +1,8 @@
 #include "Game.h"
 #include<SDL.h>
 #include<SDL_image.h>
+#include "TextureManager.h"
+
 
 
 int spritesheet_width = 0;
@@ -29,7 +31,7 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, bo
 		{
 
 			m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, 0);
-			m_textureManager.load("assets/animate-alpha.png","animate", m_pRenderer);
+			TheTextureManager::Instance()-> load("assets/animate-alpha.png","animate", m_pRenderer);
 			m_bRunning = true;
 		}
 		else
@@ -48,9 +50,9 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, bo
 void Game::render()
 {
 	SDL_RenderClear(m_pRenderer);
-	m_textureManager.draw("animate", 0, 0, 128, 82,m_pRenderer);
+	TheTextureManager::Instance()->draw("animate", 0, 0, 128, 82,m_pRenderer);
 	SDL_RenderPresent(m_pRenderer);
-	m_textureManager.drawFrame("animate", 100, 100, 128, 82,1, m_currentFrame, m_pRenderer);
+	TheTextureManager::Instance()->drawFrame("animate", 100, 100, 128, 82,1, m_currentFrame, m_pRenderer);
 	SDL_RenderPresent(m_pRenderer);
 }
 
